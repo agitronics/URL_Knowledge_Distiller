@@ -1,5 +1,5 @@
 {
-  "name": "Knowledge Extraction Pipeline",
+  "name": "Enhanced Knowledge Extraction Pipeline",
   "nodes": [
     {
       "id": "text_splitter",
@@ -38,12 +38,21 @@
         "retriever": {"$ref": "vector_store"},
         "llm": {"$ref": "llm"}
       }
+    },
+    {
+      "id": "summarizer",
+      "type": "LLMChain",
+      "params": {
+        "llm": {"$ref": "llm"},
+        "prompt_template": "Summarize the following text:\n\n{text}\n\nSummary:"
+      }
     }
   ],
   "edges": [
     {"from": "text_splitter", "to": "embeddings"},
     {"from": "embeddings", "to": "vector_store"},
     {"from": "vector_store", "to": "qa_chain"},
-    {"from": "llm", "to": "qa_chain"}
+    {"from": "llm", "to": "qa_chain"},
+    {"from": "llm", "to": "summarizer"}
   ]
 }
