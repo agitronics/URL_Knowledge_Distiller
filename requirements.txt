@@ -1,7 +1,7 @@
 gradio==3.50.2
 langflow==0.5.3
 langsmith==0.0.41
-aiohttp==3.8.5
+aiohttp==3.10.2
 networkx==3.1
 matplotlib==3.7.1
 keybert==0.7.0
