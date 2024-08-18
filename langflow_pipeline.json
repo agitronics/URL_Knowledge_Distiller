@@ -1,0 +1,49 @@
+{
+  "name": "Knowledge Extraction Pipeline",
+  "nodes": [
+    {
+      "id": "text_splitter",
+      "type": "TextSplitter",
+      "params": {
+        "chunk_size": 1000,
+        "chunk_overlap": 200
+      }
+    },
+    {
+      "id": "embeddings",
+      "type": "HuggingFaceEmbeddings",
+      "params": {
+        "model_name": "sentence-transformers/all-MiniLM-L6-v2"
+      }
+    },
+    {
+      "id": "vector_store",
+      "type": "FAISS",
+      "params": {
+        "index_name": "knowledge_index"
+      }
+    },
+    {
+      "id": "llm",
+      "type": "ChatOpenAI",
+      "params": {
+        "model_name": "gpt-3.5-turbo",
+        "temperature": 0.7
+      }
+    },
+    {
+      "id": "qa_chain",
+      "type": "RetrievalQA",
+      "params": {
+        "retriever": {"$ref": "vector_store"},
+        "llm": {"$ref": "llm"}
+      }
+    }
+  ],
+  "edges": [
+    {"from": "text_splitter", "to": "embeddings"},
+    {"from": "embeddings", "to": "vector_store"},
+    {"from": "vector_store", "to": "qa_chain"},
+    {"from": "llm", "to": "qa_chain"}
+  ]
+}
